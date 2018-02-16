@@ -5,7 +5,7 @@ import numpy as np
 def jacobi_eig(M, ap=1e-6, rp=1e-5):
     '''
     returns the eigen values and their corresponding eigen vectors using
-    the Jacobi algorithm. Each row is an eigen vector
+    the Jacobi algorithm. Each row is an eigen vector.
     Keyword Arguments:
     -- M: a symmetric, postive semi-definite matrix. Numpy Array
     -- ap: the absolute precision
@@ -49,7 +49,10 @@ def jacobi_eig(M, ap=1e-6, rp=1e-5):
         # get udpated M using Q.T*M*Q
         M_updated = np.dot(np.dot(Q.T, M_updated),Q)
 
-    return M_updated.diagonal(), Q_updated.T
+    # get indices of most to least significant eig vals for sorting
+    sort_indices = M_updated.diagonal().argsort()
+
+    return M_updated.diagonal()[sort_indices], Q_updated.T[sort_indices]
 
 def pca(X, k, center=True, scale=True):
     '''

@@ -7,9 +7,9 @@ def jacobi_eig(M, ap=1e-6, rp=1e-5):
     returns the eigen values and their corresponding eigen vectors using
     the Jacobi algorithm. Each row is an eigen vector.
     Keyword Arguments:
-    -- M: a symmetric, postive semi-definite matrix. Numpy Array
-    -- ap: the absolute precision
-    -- rp: the relative precision
+        -- M: a symmetric, postive semi-definite matrix. Numpy Array
+        -- ap: the absolute precision
+        -- rp: the relative precision
     '''
     n,m = M.shape
     assert n == m, 'Matrix is not square'
@@ -50,19 +50,20 @@ def jacobi_eig(M, ap=1e-6, rp=1e-5):
         M_updated = np.dot(np.dot(Q.T, M_updated),Q)
 
     # get indices of most to least significant eig vals for sorting
-    sort_indices = M_updated.diagonal().argsort()
+    sort_indices = M_updated.diagonal().argsort()[::-1]
 
-    return M_updated.diagonal()[sort_indices], Q_updated.T[sort_indices[::-1]]
+    return M_updated.diagonal()[sort_indices], Q_updated.T[sort_indices]
+
 
 def pca(X, k, center=True, scale=True):
     '''
     returns the first k scores of the Matrix X using PCA
     Keyword Arguments:
-    -- X: the data matrix (array) where each row is a datapoint and each column is a feature
-    -- k: number (int) of principal components to use to reduce the dimention of the data.
+        -- X: the data matrix (array) where each row is a datapoint and each column is a feature
+        -- k: number (int) of principal components to use to reduce the dimention of the data.
             If rank of Cov(X) < k, then the maxmimum possible PCs are used
-    -- center: a boolean indicating whether to center the data to 0
-    -- scale: a boolean indicating whether to scale the data
+            -- center: a boolean indicating whether to center the data to 0
+            -- scale: a boolean indicating whether to scale the data
     '''
     n,m = X.shape
     if center:

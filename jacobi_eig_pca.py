@@ -52,7 +52,7 @@ def jacobi_eig(M, ap=1e-6, rp=1e-5):
     # get indices of most to least significant eig vals for sorting
     sort_indices = M_updated.diagonal().argsort()
 
-    return M_updated.diagonal()[sort_indices], Q_updated.T[sort_indices]
+    return M_updated.diagonal()[sort_indices], Q_updated.T[sort_indices[::-1]]
 
 def pca(X, k, center=True, scale=True):
     '''
@@ -66,12 +66,12 @@ def pca(X, k, center=True, scale=True):
     '''
     n,m = X.shape
     if center:
-        X = X - np.matlib.repmat(np.mean(X,1),n,1)
+        X = X - np.matlib.repmat(np.mean(X,0),n,1)
     if scale:
-        X = np.divide(X,np.matlib.repmat(np.std(X,1),n,1))
+        X = np.divide(X,np.matlib.repmat(np.std(X,0),n,1))
     # find the covariance Matrix
-    CovM = 1./n * np.dot(X.T, X)
+    covM = 1./n * np.dot(X.T, X)
     # find the eigen values and vectors
-    pcs, eigen_vals = jacobi_eig(CovM)
+    eigen_vals, pcs = jacobi_eig(covM)
     # only return the top k pcs
     return np.dot(X, pcs[:k].T)

@@ -31,7 +31,13 @@ def jacobi_eig(M, ap=1e-6, rp=1e-5):
 
     M_updated = M
     Q_updated = np.identity(n)
+    max_val = 999999 # pick any really high value
+    max_val_old = 0
     while True:
+        # stopping condition
+        change = abs(max_val - max_val_old)
+        if max_val < ap or change < rp: break
+        max_val_old = max_val   
         # find max off-diagnol value in M
         max_val = np.abs(np.triu(M_updated,k=1)).max()
         # get its index

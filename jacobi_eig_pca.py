@@ -42,12 +42,12 @@ def jacobi_eig(M, ap=1e-6, rp=1e-5):
             break
         # calculate angle of rotation (theta)
         try:
-            theta = math.atan(2*M_updated[i,j]/(M_updated[j,j]-M_updated[i,i]))/2
+            theta = atan(2*M_updated[i,j]/(M_updated[j,j]-M_updated[i,i]))/2
         except: # incase the denominator is 0
             if M_updated[i,j] >= 0:
-                theta = math.pi/4
+                theta = pi/4
             else:
-                theta = -math.pi/4
+                theta = -pi/4
         # create corresponding Givens' Matrix
         Q = create_givens_mat(n,i,j,theta)
         # update Q (this will be the eigen vectors)
@@ -77,7 +77,7 @@ def pca(X, k, center=True, scale=True):
     if scale:
         X = np.divide(X,np.matlib.repmat(np.std(X,0),n,1))
     # find the covariance Matrix
-    covM = 1./n * np.dot(X.T, X)
+    covM = 1./n * np.dot(X.T, X) # is always symmetric and psd
     # find the eigen values and vectors
     eigen_vals, pcs = jacobi_eig(covM)
     # only return the top k pcs
@@ -86,7 +86,6 @@ def pca(X, k, center=True, scale=True):
 
 ########################## TESTING ###########################################
 # test jacobi_eig()
-import numpy as np
 # 1
 A = [[2, -1, 0], [-1, 2, -1], [0, -1, 2]] # symmetric psd
 # using numpy
@@ -98,7 +97,7 @@ print(vecs.T)
 # [ -7.07106781e-01   4.05405432e-16   7.07106781e-01]
 # [  5.00000000e-01   7.07106781e-01   5.00000000e-01]]
 # using above func
-vals, vecs = jacobi_eig(Matrix(A))
+vals, vecs = jacobi_eig(np.array(A))
 print(vals)
 #[3.414213562373095, 1.9999999999999996, 0.5857864376269049]
 print(vecs)
@@ -117,7 +116,7 @@ print(vecs.T)
 # [ 0.39711255  0.52065737 -0.75578934]
 # [ 0.23319198  0.73923874  0.63178128]]
 # using above func
-vals, vecs = jacobi_eig(Matrix(B))
+vals, vecs = jacobi_eig(np.array(B))
 print(vals)
 #[5.170086486626034, 3.311107817465982, 1.5188056959079843]
 print(vecs)
@@ -142,11 +141,14 @@ print(res)
 # [ 1.37639119  1.01636193]
 # [ 0.95929858 -0.02228394]]
 # using above function
-X = Matrix(iris_data.tolist())
-res = pca(X, k=2, center=True, scale=True)
-print(res.tolist()[:3]) # displaying only first 3
-#[[-2.2645417284068214, 0.5057039035404838], 
-# [-2.086425500669378, -0.6554047279403764], 
-# [-2.3679504490768926, -0.31847731117093403]]
+res = pca(iris_data, k=2, center=True, scale=True)
+print(res)
+#[[-2.26454171  0.5057039 ]
+# [-2.08642546 -0.65540473]
+# [-2.36795046 -0.31847731]
+# ..., 
+# [ 1.52084503  0.26679457]
+# [ 1.37639104  1.01636192]
+# [ 0.95929849 -0.02228395]]
 
 ###############################################################################
